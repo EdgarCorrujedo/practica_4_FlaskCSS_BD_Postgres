@@ -4,15 +4,12 @@ import os
 
 app = Flask(__name__)
 
-# Cadena de conexión a PostgreSQL obtenida de la variable de entorno o por defecto
-DATABASE_URL = os.getenv("DATABASE_URL", "TU_SERVICE_URI_DE_AIVEN_AQUI")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgres://...")
 
 def get_db_connection():
-    # Conexión directa a PostgreSQL
     conn = psycopg2.connect(DATABASE_URL)
     return conn
 
-# Crear la tabla automáticamente al iniciar la app si no existe
 def init_db():
     try:
         conn = get_db_connection()
@@ -22,8 +19,10 @@ def init_db():
                 id SERIAL PRIMARY KEY,
                 nombre VARCHAR(100),
                 control VARCHAR(50),
+                fecha_nacimiento DATE,
                 carrera VARCHAR(100),
                 turno VARCHAR(20),
+                deportes VARCHAR(255),
                 pasatiempos VARCHAR(255)
             );
         ''')
@@ -34,7 +33,6 @@ def init_db():
     except Exception as e:
         print(f"Error al conectar/crear tabla: {e}")
 
-# Llamar a la inicialización
 init_db()
 
 @app.route('/')
@@ -45,20 +43,23 @@ def index():
 def guardar():
     nombre = request.form.get('nombre')
     control = request.form.get('control')
+    fecha_nacimiento = request.form.get('fecha_nacimiento')
     carrera = request.form.get('carrera')
     turno = request.form.get('turno')
     
-    # Los checkboxes se obtienen como una lista y los unimos en un solo texto separado por comas
+    # Procesar listas de deportes y pasatiempos
+    deportes_lista = request.form.getlist('deportes')
+    deportes = ", ".join(deportes_lista) if deportes_lista else "Ninguno"
+
     pasatiempos_lista = request.form.getlist('pasatiempos')
     pasatiempos = ", ".join(pasatiempos_lista) if pasatiempos_lista else "Ninguno"
 
     conn = get_db_connection()
     cur = conn.cursor()
     
-    # Inserción utilizando sintaxis de Postgres (%s)
     cur.execute(
-        "INSERT INTO alumnos (nombre, control, carrera, turno, pasatiempos) VALUES (%s, %s, %s, %s, %s)",
-        (nombre, control, carrera, turno, pasatiempos)
+        "INSERT INTO alumnos (nombre, control, fecha_nacimiento, carrera, turno, deportes, pasatiempos) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+        (nombre, control, fecha_nacimiento, carrera, turno, deportes, pasatiempos)
     )
     conn.commit()
     cur.close()
