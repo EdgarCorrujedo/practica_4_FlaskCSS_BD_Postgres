@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Práctica 04 - Registro con Postgres</title>
+    <title>Práctica 04 - Registro de Alumnos</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
 </head>
 <body>
@@ -11,65 +11,88 @@
 <div class="container">
     <h2>Práctica 04: Registro de Alumnos</h2>
     <form action="/guardar" method="POST">
-        <!-- Campo Texto: Nombre -->
-        <label for="nombre">Nombre completo:</label>
-        <input type="text" id="nombre" name="nombre" placeholder="Ej. Juan Pérez" required>
+        
+        <div class="form-grid">
+            <!-- Columna Izquierda -->
+            <div class="form-column">
+                <!-- Nombre -->
+                <div class="field-group">
+                    <label for="nombre">Nombre completo:</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ej. Juan Pérez" required>
+                </div>
 
-        <!-- Campo Texto: Control -->
-        <label for="control">Número de Control:</label>
-        <input type="text" id="control" name="control" placeholder="Ej. 20040123" required>
+                <!-- Control -->
+                <div class="field-group">
+                    <label for="control">Número de Control:</label>
+                    <input type="text" id="control" name="control" placeholder="Ej. 20040123" required>
+                </div>
 
-        <!-- Campo Fecha: Fecha de Nacimiento -->
-        <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-        <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                <!-- Fecha de Nacimiento -->
+                <div class="field-group">
+                    <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                </div>
 
-        <!-- SELECT: Carrera -->
-        <label for="carrera">Carrera:</label>
-        <select id="carrera" name="carrera" required>
-            <option value="">-- Selecciona una opción --</option>
-            <option value="Sistemas Computacionales">Sistemas Computacionales</option>
-            <option value="Industrial">Ingeniería Industrial</option>
-            <option value="Mecatrónica">Ingeniería Mecatrónica</option>
-            <option value="Administración">Licenciatura en Administración</option>
-        </select>
+                <!-- Carrera -->
+                <div class="field-group">
+                    <label for="carrera">Carrera:</label>
+                    <select id="carrera" name="carrera" required>
+                        <option value="">-- Selecciona una opción --</option>
+                        <option value="Sistemas Computacionales">Sistemas Computacionales</option>
+                        <option value="Industrial">Ingeniería Industrial</option>
+                        <option value="Mecatrónica">Ingeniería Mecatrónica</option>
+                        <option value="Administración">Licenciatura en Administración</option>
+                    </select>
+                </div>
 
-        <!-- RADIO BUTTONS: Turno -->
-        <label>Turno:</label>
-        <div class="radio-group">
-            <input type="radio" id="matutino" name="turno" value="Matutino" required>
-            <label for="matutino">Matutino</label><br>
-            <input type="radio" id="vespertino" name="turno" value="Vespertino">
-            <label for="vespertino">Vespertino</label>
-        </div>
+                <!-- Turno -->
+                <div class="field-group">
+                    <label>Turno:</label>
+                    <div class="radio-group inline-options">
+                        <input type="radio" id="matutino" name="turno" value="Matutino" required>
+                        <label for="matutino">Matutino</label>
+                        <input type="radio" id="vespertino" name="turno" value="Vespertino">
+                        <label for="vespertino">Vespertino</label>
+                    </div>
+                </div>
+            </div>
 
-        <!-- CHECKBOXES: Deportes -->
-        <label>Deportes que practica:</label>
-        <div class="checkbox-group">
-            <input type="checkbox" id="futbol" name="deportes" value="Fútbol">
-            <label for="futbol">Fútbol</label><br>
-            <input type="checkbox" id="basquetbol" name="deportes" value="Básquetbol">
-            <label for="basquetbol">Básquetbol</label><br>
-            <input type="checkbox" id="natacion" name="deportes" value="Natación">
-            <label for="natacion">Natación</label><br>
-            <input type="checkbox" id="voleibol" name="deportes" value="Vóleibol">
-            <label for="voleibol">Vóleibol</label><br>
-            <input type="checkbox" id="atletismo" name="deportes" value="Atletismo">
-            <label for="atletismo">Atletismo</label>
-        </div>
+            <!-- Columna Derecha -->
+            <div class="form-column">
+                <!-- Deportes -->
+                <div class="field-group">
+                    <label>Deportes (Selecciona 1 o varios):</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="fútbol" name="deportes" value="Fútbol">
+                        <label for="fútbol">Fútbol</label><br>
+                        <input type="checkbox" id="básquetbol" name="deportes" value="Básquetbol">
+                        <label for="básquetbol">Básquetbol</label><br>
+                        <input type="checkbox" id="natación" name="deportes" value="Natación">
+                        <label for="natación">Natación</label><br>
+                        <input type="checkbox" id="voleibol" name="deportes" value="Voleibol">
+                        <label for="voleibol">Voleibol</label><br>
+                        <input type="checkbox" id="atletismo" name="deportes" value="Atletismo">
+                        <label for="atletismo">Atletismo</label>
+                    </div>
+                </div>
 
-        <!-- CHECKBOXES: Pasatiempos -->
-        <label>Intereses o Pasatiempos:</label>
-        <div class="checkbox-group">
-            <input type="checkbox" id="lectura" name="pasatiempos" value="Lectura">
-            <label for="lectura">Lectura</label><br>
-            <input type="checkbox" id="musica" name="pasatiempos" value="Escuchar Música">
-            <label for="musica">Escuchar Música</label><br>
-            <input type="checkbox" id="videojuegos" name="pasatiempos" value="Videojuegos">
-            <label for="videojuegos">Videojuegos</label><br>
-            <input type="checkbox" id="programacion" name="pasatiempos" value="Programación">
-            <label for="programacion">Programación</label><br>
-            <input type="checkbox" id="cine" name="pasatiempos" value="Cine / Películas">
-            <label for="cine">Cine / Películas</label>
+                <!-- Pasatiempos / Intereses -->
+                <div class="field-group">
+                    <label>Pasatiempos / Intereses (Selecciona 1 o varios):</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="lectura" name="pasatiempos" value="Lectura">
+                        <label for="lectura">Lectura</label><br>
+                        <input type="checkbox" id="musica" name="pasatiempos" value="Música">
+                        <label for="musica">Música</label><br>
+                        <input type="checkbox" id="videojuegos" name="pasatiempos" value="Videojuegos">
+                        <label for="videojuegos">Videojuegos</label><br>
+                        <input type="checkbox" id="programacion" name="pasatiempos" value="Programación">
+                        <label for="programacion">Programación</label><br>
+                        <input type="checkbox" id="cine" name="pasatiempos" value="Cine / Películas">
+                        <label for="cine">Cine / Películas</label>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <button type="submit">Guardar Datos en Postgres</button>
