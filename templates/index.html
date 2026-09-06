@@ -4,16 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Práctica 04 - Registro con Postgres</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f4f9; }
-        .container { max-width: 500px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #333; }
-        label { font-weight: bold; display: block; margin-top: 10px; }
-        input[type="text"], select { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
-        .checkbox-group, .radio-group { margin-top: 5px; }
-        button { background-color: #28a745; color: white; border: none; padding: 10px 15px; width: 100%; margin-top: 20px; font-size: 16px; border-radius: 5px; cursor: pointer; }
-        button:hover { background-color: #218838; }
-    </style>
+    <!-- Carga del archivo CSS desde la carpeta static -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
 </head>
 <body>
 
@@ -42,20 +34,20 @@
         <label>Turno:</label>
         <div class="radio-group">
             <input type="radio" id="matutino" name="turno" value="Matutino" required>
-            <label for="matutino" style="display:inline; font-weight:normal;">Matutino</label><br>
+            <label for="matutino">Matutino</label><br>
             <input type="radio" id="vespertino" name="turno" value="Vespertino">
-            <label for="vespertino" style="display:inline; font-weight:normal;">Vespertino</label>
+            <label for="vespertino">Vespertino</label>
         </div>
 
         <!-- CHECKBOXES: Pasatiempos -->
         <label>Pasatiempos / Intereses:</label>
         <div class="checkbox-group">
             <input type="checkbox" id="deportes" name="pasatiempos" value="Deportes">
-            <label for="deportes" style="display:inline; font-weight:normal;">Deportes</label><br>
+            <label for="deportes">Deportes</label><br>
             <input type="checkbox" id="lectura" name="pasatiempos" value="Lectura">
-            <label for="lectura" style="display:inline; font-weight:normal;">Lectura</label><br>
+            <label for="lectura">Lectura</label><br>
             <input type="checkbox" id="programacion" name="pasatiempos" value="Programación">
-            <label for="programacion" style="display:inline; font-weight:normal;">Programación</label>
+            <label for="programacion">Programación</label>
         </div>
 
         <button type="submit">Guardar Datos en Postgres</button>
