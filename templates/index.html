@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Práctica 04 - Registro con Postgres</title>
-    <!-- Carga del archivo CSS desde la carpeta static -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
 </head>
 <body>
@@ -19,6 +18,10 @@
         <!-- Campo Texto: Control -->
         <label for="control">Número de Control:</label>
         <input type="text" id="control" name="control" placeholder="Ej. 20040123" required>
+
+        <!-- Campo Fecha: Fecha de Nacimiento -->
+        <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+        <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
 
         <!-- SELECT: Carrera -->
         <label for="carrera">Carrera:</label>
@@ -39,15 +42,34 @@
             <label for="vespertino">Vespertino</label>
         </div>
 
-        <!-- CHECKBOXES: Pasatiempos -->
-        <label>Pasatiempos / Intereses:</label>
+        <!-- CHECKBOXES: Deportes -->
+        <label>Deportes que practica:</label>
         <div class="checkbox-group">
-            <input type="checkbox" id="deportes" name="pasatiempos" value="Deportes">
-            <label for="deportes">Deportes</label><br>
+            <input type="checkbox" id="futbol" name="deportes" value="Fútbol">
+            <label for="futbol">Fútbol</label><br>
+            <input type="checkbox" id="basquetbol" name="deportes" value="Básquetbol">
+            <label for="basquetbol">Básquetbol</label><br>
+            <input type="checkbox" id="natacion" name="deportes" value="Natación">
+            <label for="natacion">Natación</label><br>
+            <input type="checkbox" id="voleibol" name="deportes" value="Vóleibol">
+            <label for="voleibol">Vóleibol</label><br>
+            <input type="checkbox" id="atletismo" name="deportes" value="Atletismo">
+            <label for="atletismo">Atletismo</label>
+        </div>
+
+        <!-- CHECKBOXES: Pasatiempos -->
+        <label>Intereses o Pasatiempos:</label>
+        <div class="checkbox-group">
             <input type="checkbox" id="lectura" name="pasatiempos" value="Lectura">
             <label for="lectura">Lectura</label><br>
+            <input type="checkbox" id="musica" name="pasatiempos" value="Escuchar Música">
+            <label for="musica">Escuchar Música</label><br>
+            <input type="checkbox" id="videojuegos" name="pasatiempos" value="Videojuegos">
+            <label for="videojuegos">Videojuegos</label><br>
             <input type="checkbox" id="programacion" name="pasatiempos" value="Programación">
-            <label for="programacion">Programación</label>
+            <label for="programacion">Programación</label><br>
+            <input type="checkbox" id="cine" name="pasatiempos" value="Cine / Películas">
+            <label for="cine">Cine / Películas</label>
         </div>
 
         <button type="submit">Guardar Datos en Postgres</button>
