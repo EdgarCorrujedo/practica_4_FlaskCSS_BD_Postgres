@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgres://...")
+DATABASE_URL = os.getenv("DATABASE_URL", "TU_SERVICE_URI_DE_AIVEN_AQUI")
 
 def get_db_connection():
     conn = psycopg2.connect(DATABASE_URL)
@@ -29,7 +29,7 @@ def init_db():
         conn.commit()
         cur.close()
         conn.close()
-        print("Tabla en Postgres verificada/creada con éxito.")
+        print("Tabla verificada/creada en Postgres.")
     except Exception as e:
         print(f"Error al conectar/crear tabla: {e}")
 
@@ -47,7 +47,7 @@ def guardar():
     carrera = request.form.get('carrera')
     turno = request.form.get('turno')
     
-    # Procesar listas de deportes y pasatiempos
+    # Procesar listas de Checkboxes
     deportes_lista = request.form.getlist('deportes')
     deportes = ", ".join(deportes_lista) if deportes_lista else "Ninguno"
 
@@ -65,7 +65,7 @@ def guardar():
     cur.close()
     conn.close()
 
-    return "<h1>¡Datos guardados con éxito en la base de datos de Postgres!</h1><br><a href='/'>Regresar</a>"
+    return "<h1>¡Datos guardados con éxito en Postgres!</h1><br><a href='/'>Regresar</a>"
 
 if __name__ == '__main__':
     app.run(debug=True)
