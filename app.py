@@ -6,10 +6,27 @@ app = Flask(__name__)
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:198913@localhost:5432/practica4_db")
 
-def get_db_connection():
-    conn = psycopg2.connect(DATABASE_URL)
-    return conn
+def init_db():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS usuarios (
+            id SERIAL PRIMARY KEY,
+            nombre VARCHAR(100),
+            numero_control VARCHAR(50),
+            carrera VARCHAR(100),
+            turno VARCHAR(20),
+            fecha_nacimiento DATE,
+            pasatiempos TEXT,
+            deportes TEXT
+        );
+    ''')
+    conn.commit()
+    cur.close()
+    conn.close()
 
+# Se ejecuta al arrancar la app
+init_db()
 def init_db():
     try:
         conn = get_db_connection()
