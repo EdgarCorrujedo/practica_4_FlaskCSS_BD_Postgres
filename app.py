@@ -40,16 +40,18 @@ init_db()
 def index():
     return render_template('index.html')
 
-@app.route('/guardar', methods=['POST'])
+@@app.route('/guardar', methods=['POST'])
 def guardar():
     if request.method == 'POST':
-        nombre = request.form.get('nombre')
-        numero_control = request.form.get('numero_control')
-        carrera = request.form.get('carrera')
-        turno = request.form.get('turno')
-        fecha_nacimiento = request.form.get('fecha_nacimiento')
-        pasatiempos = request.form.get('pasatiempos')
-        deportes = request.form.get('deportes')
+        nombre = request.form.get('Nombre')
+        numero_control = request.form.get('NumeroControl')
+        fecha_nacimiento = request.form.get('FechaNacimiento')
+        carrera = request.form.get('Carrera')
+        turno = request.form.get('Turno')
+        
+        # Para capturar múltiples checkboxes seleccionados
+        deportes = ", ".join(request.form.getlist('Deportes'))
+        pasatiempos = ", ".join(request.form.getlist('Pasatiempos'))
 
         conn = get_db_connection()
         cur = conn.cursor()
@@ -61,6 +63,7 @@ def guardar():
         conn.commit()
         cur.close()
         conn.close()
+        
         return redirect(url_for('index'))
 
 if __name__ == '__main__':
