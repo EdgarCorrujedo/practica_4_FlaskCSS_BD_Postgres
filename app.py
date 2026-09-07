@@ -4,16 +4,10 @@ from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
-DATABASE_URL = os.environ.get('DATABASE_URL')
-
 def get_db_connection():
-    # Obtener la URL de conexión desde Render
     db_url = os.environ.get('DATABASE_URL')
-    
-    # Si por alguna razón la variable no está configurada, lanzar un error claro
     if not db_url:
         raise ValueError("La variable de entorno DATABASE_URL no está configurada en Render.")
-        
     conn = psycopg2.connect(db_url)
     return conn
 
@@ -40,7 +34,7 @@ def init_db():
     except Exception as e:
         print(f"Error al inicializar base de datos: {e}")
 
-# Inicializar la base de datos
+# Inicializar la base de datos al arrancar
 init_db()
 
 @app.route('/')
@@ -61,7 +55,7 @@ def guardar():
             deportes_lista = request.form.getlist('Deportes')
             pasatiempos_lista = request.form.getlist('Pasatiempos')
 
-            # Si la lista tiene elementos los une con coma; si está vacía, envía None (NULL a PostgreSQL)
+            # Si la lista tiene elementos los une con coma; si está vacía, envía None (NULL en Postgres)
             deportes = ", ".join(deportes_lista) if deportes_lista else None
             pasatiempos = ", ".join(pasatiempos_lista) if pasatiempos_lista else None
 
@@ -81,6 +75,6 @@ def guardar():
         except Exception as e:
             print(f"Error al guardar datos: {e}")
             return f"Error en la base de datos: {e}", 500
-            
+
 if __name__ == '__main__':
     app.run(debug=True)
