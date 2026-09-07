@@ -40,7 +40,7 @@ init_db()
 def index():
     return render_template('index.html')
 
-@@app.route('/guardar', methods=['POST'])
+@app.route('/guardar', methods=['POST'])
 def guardar():
     if request.method == 'POST':
         nombre = request.form.get('Nombre')
