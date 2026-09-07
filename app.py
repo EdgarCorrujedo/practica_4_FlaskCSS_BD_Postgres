@@ -43,28 +43,37 @@ def index():
 @app.route('/guardar', methods=['POST'])
 def guardar():
     if request.method == 'POST':
-        nombre = request.form.get('Nombre')
-        numero_control = request.form.get('NumeroControl')
-        fecha_nacimiento = request.form.get('FechaNacimiento')
-        carrera = request.form.get('Carrera')
-        turno = request.form.get('Turno')
-        
-        # Para capturar múltiples checkboxes seleccionados
-        deportes = ", ".join(request.form.getlist('Deportes'))
-        pasatiempos = ", ".join(request.form.getlist('Pasatiempos'))
+        try:
+            nombre = request.form.get('Nombre')
+            numero_control = request.form.get('NumeroControl')
+            fecha_nacimiento = request.form.get('FechaNacimiento') or None
+            carrera = request.form.get('Carrera')
+            turno = request.form.get('Turno')
+            
+            # Obtener listas de checkboxes
+            deportes_lista = request.form.getlist('Deportes')
+            pasatiempos_lista = request.form.getlist('Pasatiempos')
 
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute('''
-            INSERT INTO usuarios (nombre, numero_control, carrera, turno, fecha_nacimiento, pasatiempos, deportes)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-        ''', (nombre, numero_control, carrera, turno, fecha_nacimiento, pasatiempos, deportes))
-        
-        conn.commit()
-        cur.close()
-        conn.close()
-        
-        return redirect(url_for('index'))
+            # Si la lista tiene elementos los une con coma; si está vacía, envía None (NULL a PostgreSQL)
+            deportes = ", ".join(deportes_lista) if deportes_lista else None
+            pasatiempos = ", ".join(pasatiempos_lista) if pasatiempos_lista else None
 
+            conn = get_db_connection()
+            cur = conn.cursor()
+            cur.execute('''
+                INSERT INTO usuarios (nombre, numero_control, carrera, turno, fecha_nacimiento, pasatiempos, deportes)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            ''', (nombre, numero_control, carrera, turno, fecha_nacimiento, pasatiempos, deportes))
+            
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+            return redirect(url_for('index'))
+
+        except Exception as e:
+            print(f"Error al guardar datos: {e}")
+            return f"Error en la base de datos: {e}", 500
+            
 if __name__ == '__main__':
     app.run(debug=True)
