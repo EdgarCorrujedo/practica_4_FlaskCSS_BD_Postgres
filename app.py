@@ -7,7 +7,14 @@ app = Flask(__name__)
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 def get_db_connection():
-    conn = psycopg2.connect(DATABASE_URL)
+    # Obtener la URL de conexión desde Render
+    db_url = os.environ.get('DATABASE_URL')
+    
+    # Si por alguna razón la variable no está configurada, lanzar un error claro
+    if not db_url:
+        raise ValueError("La variable de entorno DATABASE_URL no está configurada en Render.")
+        
+    conn = psycopg2.connect(db_url)
     return conn
 
 def init_db():
