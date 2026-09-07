@@ -1,55 +1,39 @@
-from flask import Flask, render_template, request, redirect, url_for
-import psycopg2
 import os
+import psycopg2
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:198913@localhost:5432/practica4_db")
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
-def init_db():
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute('''
-        CREATE TABLE IF NOT EXISTS usuarios (
-            id SERIAL PRIMARY KEY,
-            nombre VARCHAR(100),
-            numero_control VARCHAR(50),
-            carrera VARCHAR(100),
-            turno VARCHAR(20),
-            fecha_nacimiento DATE,
-            pasatiempos TEXT,
-            deportes TEXT
-        );
-    ''')
-    conn.commit()
-    cur.close()
-    conn.close()
+def get_db_connection():
+    conn = psycopg2.connect(DATABASE_URL)
+    return conn
 
-# Se ejecuta al arrancar la app
-init_db()
 def init_db():
     try:
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute('''
-            CREATE TABLE IF NOT EXISTS alumnos (
+            CREATE TABLE IF NOT EXISTS usuarios (
                 id SERIAL PRIMARY KEY,
                 nombre VARCHAR(100),
-                control VARCHAR(50),
-                fecha_nacimiento DATE,
+                numero_control VARCHAR(50),
                 carrera VARCHAR(100),
                 turno VARCHAR(20),
-                deportes VARCHAR(255),
-                pasatiempos VARCHAR(255)
+                fecha_nacimiento DATE,
+                pasatiempos TEXT,
+                deportes TEXT
             );
         ''')
         conn.commit()
         cur.close()
         conn.close()
-        print("Tabla verificada/creada en Postgres.")
+        print("Tabla inicializada correctamente.")
     except Exception as e:
-        print(f"Error al conectar/crear tabla: {e}")
+        print(f"Error al inicializar base de datos: {e}")
 
+# Inicializar la base de datos
 init_db()
 
 @app.route('/')
@@ -58,31 +42,26 @@ def index():
 
 @app.route('/guardar', methods=['POST'])
 def guardar():
-    nombre = request.form.get('nombre')
-    control = request.form.get('control')
-    fecha_nacimiento = request.form.get('fecha_nacimiento')
-    carrera = request.form.get('carrera')
-    turno = request.form.get('turno')
-    
-    # Procesar listas de Checkboxes
-    deportes_lista = request.form.getlist('deportes')
-    deportes = ", ".join(deportes_lista) if deportes_lista else "Ninguno"
+    if request.method == 'POST':
+        nombre = request.form.get('nombre')
+        numero_control = request.form.get('numero_control')
+        carrera = request.form.get('carrera')
+        turno = request.form.get('turno')
+        fecha_nacimiento = request.form.get('fecha_nacimiento')
+        pasatiempos = request.form.get('pasatiempos')
+        deportes = request.form.get('deportes')
 
-    pasatiempos_lista = request.form.getlist('pasatiempos')
-    pasatiempos = ", ".join(pasatiempos_lista) if pasatiempos_lista else "Ninguno"
-
-    conn = get_db_connection()
-    cur = conn.cursor()
-    
-    cur.execute(
-        "INSERT INTO alumnos (nombre, control, fecha_nacimiento, carrera, turno, deportes, pasatiempos) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-        (nombre, control, fecha_nacimiento, carrera, turno, deportes, pasatiempos)
-    )
-    conn.commit()
-    cur.close()
-    conn.close()
-
-    return "<h1>¡Datos guardados con éxito en Postgres!</h1><br><a href='/'>Regresar</a>"
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('''
+            INSERT INTO usuarios (nombre, numero_control, carrera, turno, fecha_nacimiento, pasatiempos, deportes)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        ''', (nombre, numero_control, carrera, turno, fecha_nacimiento, pasatiempos, deportes))
+        
+        conn.commit()
+        cur.close()
+        conn.close()
+        return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)
